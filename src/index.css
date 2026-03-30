@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* ERGO button animations */
+@layer components {
+  .btn-primary {
+    @apply relative overflow-hidden rounded-full border-2 border-[#BF1528] bg-transparent px-8 py-3 font-semibold text-[#BF1528] transition-colors duration-300;
+  }
+
+  .btn-primary::before {
+    content: '';
+    @apply absolute top-0 left-0 h-full w-0 bg-[#BF1528] transition-all duration-400;
+    z-index: -1;
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .btn-primary:hover::before {
+    @apply w-full;
+  }
+
+  .btn-primary:hover {
+    @apply text-white;
+  }
+
+  .btn-primary:disabled {
+    @apply border-gray-300 text-gray-300 cursor-not-allowed;
+  }
+
+  .btn-primary:disabled::before {
+    @apply hidden;
+  }
+
+  .btn-secondary {
+    @apply relative bg-transparent border-none text-[#575756] px-8 py-3 font-medium cursor-pointer overflow-hidden transition-colors duration-300;
+  }
+
+  .btn-secondary::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-[3px] bg-[#BF1528];
+    transition: width 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .btn-secondary:hover::after {
+    @apply w-full;
+  }
+
+  .btn-secondary:hover {
+    @apply text-[#BF1528];
+  }
+}
