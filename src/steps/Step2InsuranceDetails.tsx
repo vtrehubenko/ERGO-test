@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { insuranceSchema, InsuranceFormData } from '../schemas/insuranceSchema';
+import { insuranceSchema } from '../schemas/insuranceSchema';
+import type { InsuranceFormData } from '../schemas/insuranceSchema';
 import { useWizard } from '../hooks/useWizard';
 import { useTranslation } from '../hooks/useTranslation';
 import { Input } from '../components/Input';

@@ -1,4 +1,5 @@
-import { InsuranceType, RiskResult, INSURANCE_TYPE_FACTORS } from '../types/wizard';
+import type { InsuranceType, RiskResult } from '../types/wizard';
+import { INSURANCE_TYPE_FACTORS } from '../types/wizard';
 
 interface RiskInput {
   age: number;

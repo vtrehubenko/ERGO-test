@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { customerSchema, CustomerFormData } from '../schemas/customerSchema';
+import { customerSchema } from '../schemas/customerSchema';
+import type { CustomerFormData } from '../schemas/customerSchema';
 import { useWizard } from '../hooks/useWizard';
 import { useTranslation } from '../hooks/useTranslation';
 import { Input } from '../components/Input';
