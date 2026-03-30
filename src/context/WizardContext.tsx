@@ -4,7 +4,9 @@ import type { CustomerData, InsuranceData, WizardState } from '../types/wizard';
 const initialCustomerData: CustomerData = {
   firstName: '',
   lastName: '',
-  age: 0,
+  dateOfBirth: '',
+  country: '',
+  province: '',
   city: '',
 };
 
