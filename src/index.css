@@ -4,12 +4,14 @@
 @layer components {
   .btn-primary {
     @apply relative overflow-hidden rounded-full border-2 border-[#BF1528] bg-transparent px-8 py-3 font-semibold text-[#BF1528] transition-colors duration-300;
+    z-index: 0;
   }
 
   .btn-primary::before {
     content: '';
-    @apply absolute top-0 left-0 h-full w-0 bg-[#BF1528] transition-all duration-400;
+    @apply absolute top-0 left-0 h-full w-0 bg-[#BF1528] transition-all;
     z-index: -1;
+    transition-duration: 400ms;
     transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
