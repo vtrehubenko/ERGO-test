@@ -1,84 +1,94 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { customerSchema } from './customerSchema';
 
 describe('customerSchema', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  const validData = {
+    firstName: 'Jan',
+    lastName: 'Kowalski',
+    dateOfBirth: '1996-03-30',
+    country: 'PL',
+    province: 'Mazowieckie',
+    city: 'Warszawa',
+  };
+
   it('validates correct data', () => {
-    const result = customerSchema.safeParse({
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      age: 30,
-      city: 'Warszawa',
-    });
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse(validData);
     expect(result.success).toBe(true);
   });
 
   it('rejects empty first name', () => {
-    const result = customerSchema.safeParse({
-      firstName: '',
-      lastName: 'Kowalski',
-      age: 30,
-      city: 'Warszawa',
-    });
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, firstName: '' });
     expect(result.success).toBe(false);
   });
 
   it('rejects empty last name', () => {
-    const result = customerSchema.safeParse({
-      firstName: 'Jan',
-      lastName: '',
-      age: 30,
-      city: 'Warszawa',
-    });
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, lastName: '' });
     expect(result.success).toBe(false);
   });
 
-  it('rejects age below 18', () => {
-    const result = customerSchema.safeParse({
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      age: 17,
-      city: 'Warszawa',
-    });
+  it('rejects empty dateOfBirth', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, dateOfBirth: '' });
     expect(result.success).toBe(false);
   });
 
-  it('rejects age above 100', () => {
-    const result = customerSchema.safeParse({
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      age: 101,
-      city: 'Warszawa',
-    });
+  it('rejects person younger than 18', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, dateOfBirth: '2010-01-01' });
     expect(result.success).toBe(false);
   });
 
-  it('accepts age at boundaries (18 and 100)', () => {
-    expect(customerSchema.safeParse({
-      firstName: 'Jan', lastName: 'K', age: 18, city: 'X',
-    }).success).toBe(true);
+  it('rejects person older than 100', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, dateOfBirth: '1920-01-01' });
+    expect(result.success).toBe(false);
+  });
 
-    expect(customerSchema.safeParse({
-      firstName: 'Jan', lastName: 'K', age: 100, city: 'X',
-    }).success).toBe(true);
+  it('accepts person exactly 18', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, dateOfBirth: '2008-03-30' });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts person exactly 100', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, dateOfBirth: '1926-03-30' });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects empty country', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, country: '' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects empty province', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, province: '' });
+    expect(result.success).toBe(false);
   });
 
   it('rejects empty city', () => {
-    const result = customerSchema.safeParse({
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      age: 30,
-      city: '',
-    });
-    expect(result.success).toBe(false);
-  });
-
-  it('rejects non-numeric age', () => {
-    const result = customerSchema.safeParse({
-      firstName: 'Jan',
-      lastName: 'Kowalski',
-      age: 'thirty',
-      city: 'Warszawa',
-    });
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-03-30'));
+    const result = customerSchema.safeParse({ ...validData, city: '' });
     expect(result.success).toBe(false);
   });
 });
