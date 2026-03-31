@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { useWizard } from '../hooks/useWizard';
 import { useTranslation } from '../hooks/useTranslation';
 import { calculateRisk } from '../utils/riskCalculation';
+import { calculateAge, formatDateOfBirth } from '../utils/dateUtils';
 import { submitOffer } from '../api/mockApi';
 import { Button } from '../components/Button';
+import type { Language } from '../context/LanguageContext';
 
 const riskColorMap = {
   Low: 'text-green-600 bg-green-50 border-green-200',
@@ -13,13 +15,14 @@ const riskColorMap = {
 
 export function Step3Summary() {
   const { state, prevStep, reset } = useWizard();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [offerId, setOfferId] = useState<string>('');
 
   const { customerData, insuranceData } = state;
+  const age = calculateAge(customerData.dateOfBirth);
   const risk = calculateRisk({
-    age: customerData.age,
+    age,
     coverage: insuranceData.coverage,
     type: insuranceData.type,
   });
@@ -59,8 +62,14 @@ export function Step3Summary() {
         <div className="grid grid-cols-2 gap-y-2 text-sm">
           <span className="text-[#575756]">{t('summary.name')}</span>
           <span className="font-medium">{customerData.firstName} {customerData.lastName}</span>
+          <span className="text-[#575756]">{t('summary.dateOfBirth')}</span>
+          <span className="font-medium">{formatDateOfBirth(customerData.dateOfBirth, language as Language)}</span>
           <span className="text-[#575756]">{t('summary.age')}</span>
-          <span className="font-medium">{customerData.age}</span>
+          <span className="font-medium">{age}</span>
+          <span className="text-[#575756]">{t('summary.country')}</span>
+          <span className="font-medium">{t(`country.${customerData.country}`)}</span>
+          <span className="text-[#575756]">{t('summary.province')}</span>
+          <span className="font-medium">{customerData.province}</span>
           <span className="text-[#575756]">{t('summary.city')}</span>
           <span className="font-medium">{customerData.city}</span>
         </div>
