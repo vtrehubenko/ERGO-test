@@ -9,8 +9,8 @@ function generateOfferId(): string {
 }
 
 export async function submitOffer(
-  _customer: CustomerData,
-  _insurance: InsuranceData
+  _customer: CustomerData, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _insurance: InsuranceData // eslint-disable-line @typescript-eslint/no-unused-vars
 ): Promise<{ offerId: string }> {
   await delay(1000 + Math.random() * 1000);
 

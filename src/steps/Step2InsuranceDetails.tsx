@@ -21,9 +21,8 @@ export function Step2InsuranceDetails() {
     control,
     watch,
     formState: { errors },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } = useForm<InsuranceFormData>({
-    resolver: zodResolver(insuranceSchema) as any,
+  } = useForm({
+    resolver: zodResolver(insuranceSchema),
     defaultValues: {
       type: state.insuranceData.type,
       coverage: state.insuranceData.coverage || undefined,
@@ -34,12 +33,13 @@ export function Step2InsuranceDetails() {
 
   const selectedType = watch('type') as InsuranceType | undefined;
 
-  function onSubmit(data: InsuranceFormData) {
+  function onSubmit(data: Record<string, unknown>) {
+    const typed = data as InsuranceFormData;
     setInsuranceData({
-      type: data.type as InsuranceType,
-      coverage: data.coverage,
-      additionalOptions: data.additionalOptions,
-      vehicleYear: data.type === 'Car' ? data.vehicleYear : undefined,
+      type: typed.type as InsuranceType,
+      coverage: typed.coverage,
+      additionalOptions: typed.additionalOptions,
+      vehicleYear: typed.type === 'Car' ? typed.vehicleYear : undefined,
     });
     nextStep();
   }
@@ -75,7 +75,7 @@ export function Step2InsuranceDetails() {
             control={control}
             render={({ field }) => (
               <VehicleYearPicker
-                value={field.value}
+                value={field.value as number | undefined}
                 onChange={field.onChange}
                 label={t('field.vehicleYear')}
                 placeholder={t('placeholder.vehicleYear')}

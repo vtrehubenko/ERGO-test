@@ -31,6 +31,8 @@ app.post('/api/risk', (req, res) => {
   res.json(result);
 });
 
+// Express error handler requires 4 parameters
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Server error:', err.message);
   res.status(500).json({ error: 'Internal server error' });

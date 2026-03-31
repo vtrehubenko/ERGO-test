@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import type { CustomerData, InsuranceData, WizardState } from '../types/wizard';

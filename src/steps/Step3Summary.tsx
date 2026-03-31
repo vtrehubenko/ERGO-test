@@ -27,7 +27,6 @@ export function Step3Summary() {
 
   useEffect(() => {
     let cancelled = false;
-    setRiskLoading(true);
 
     fetchRiskScore({
       age,

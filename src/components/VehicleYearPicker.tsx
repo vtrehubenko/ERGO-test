@@ -19,9 +19,10 @@ export function VehicleYearPicker({ value, onChange, label, error, placeholder }
 
   const [selectedYear, setSelectedYear] = useState(value || currentYear);
 
-  useEffect(() => {
+  function handleOpen() {
     if (value) setSelectedYear(value);
-  }, [value]);
+    setIsOpen(true);
+  }
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -54,7 +55,7 @@ export function VehicleYearPicker({ value, onChange, label, error, placeholder }
       <label className="text-sm font-medium text-[#575756]">{label}</label>
       <button
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
         className={`rounded-md border px-3 py-2 text-sm text-left outline-none transition-colors
           ${error ? 'border-[#BF1528] bg-red-50' : 'border-gray-300 bg-white hover:border-[#BF1528]'}
           ${!value ? 'text-gray-400' : 'text-gray-900'}`}

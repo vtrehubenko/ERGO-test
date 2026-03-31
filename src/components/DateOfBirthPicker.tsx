@@ -30,12 +30,7 @@ export function DateOfBirthPicker({ value, onChange, label, error, placeholder }
   const [selectedDay, setSelectedDay] = useState(parsed[2] || 1);
 
   const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
-
-  useEffect(() => {
-    if (selectedDay > daysInMonth) {
-      setSelectedDay(daysInMonth);
-    }
-  }, [selectedMonth, selectedYear, daysInMonth, selectedDay]);
+  const clampedDay = selectedDay > daysInMonth ? daysInMonth : selectedDay;
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -52,7 +47,7 @@ export function DateOfBirthPicker({ value, onChange, label, error, placeholder }
   function handleConfirm() {
     const y = String(selectedYear);
     const m = String(selectedMonth).padStart(2, '0');
-    const d = String(selectedDay).padStart(2, '0');
+    const d = String(clampedDay).padStart(2, '0');
     onChange(`${y}-${m}-${d}`);
     setIsOpen(false);
   }
@@ -110,7 +105,7 @@ export function DateOfBirthPicker({ value, onChange, label, error, placeholder }
               <div className="flex flex-col gap-1 w-20">
                 <label className="text-xs text-[#575756]">Day</label>
                 <select
-                  value={selectedDay}
+                  value={clampedDay}
                   onChange={(e) => setSelectedDay(Number(e.target.value))}
                   className="rounded-md border border-gray-300 px-2 py-2 text-sm outline-none focus:border-[#BF1528]"
                 >
