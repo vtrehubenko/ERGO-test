@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWizard } from '../hooks/useWizard';
 import { useTranslation } from '../hooks/useTranslation';
-import { calculateRisk } from '../utils/riskCalculation';
+import { fetchRiskScore } from '../utils/riskCalculation';
 import { calculateAge, formatDateOfBirth } from '../utils/dateUtils';
 import { submitOffer } from '../api/mockApi';
 import { Button } from '../components/Button';
 import type { Language } from '../context/LanguageContext';
+import type { RiskResult } from '../types/wizard';
 
 const riskColorMap = {
   Low: 'text-green-600 bg-green-50 border-green-200',
@@ -18,14 +19,29 @@ export function Step3Summary() {
   const { t, language } = useTranslation();
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [offerId, setOfferId] = useState<string>('');
+  const [risk, setRisk] = useState<RiskResult | null>(null);
+  const [riskLoading, setRiskLoading] = useState(true);
 
   const { customerData, insuranceData } = state;
   const age = calculateAge(customerData.dateOfBirth);
-  const risk = calculateRisk({
-    age,
-    coverage: insuranceData.coverage,
-    type: insuranceData.type,
-  });
+
+  useEffect(() => {
+    let cancelled = false;
+    setRiskLoading(true);
+
+    fetchRiskScore({
+      age,
+      coverage: insuranceData.coverage,
+      type: insuranceData.type,
+    }).then((result) => {
+      if (!cancelled) {
+        setRisk(result);
+        setRiskLoading(false);
+      }
+    });
+
+    return () => { cancelled = true; };
+  }, [age, insuranceData.coverage, insuranceData.type]);
 
   async function handleSubmit() {
     setStatus('loading');
@@ -66,10 +82,6 @@ export function Step3Summary() {
           <span className="font-medium">{formatDateOfBirth(customerData.dateOfBirth, language as Language)}</span>
           <span className="text-[#575756]">{t('summary.age')}</span>
           <span className="font-medium">{age}</span>
-          <span className="text-[#575756]">{t('summary.country')}</span>
-          <span className="font-medium">{t(`country.${customerData.country}`)}</span>
-          <span className="text-[#575756]">{t('summary.province')}</span>
-          <span className="font-medium">{customerData.province}</span>
           <span className="text-[#575756]">{t('summary.city')}</span>
           <span className="font-medium">{customerData.city}</span>
         </div>
@@ -97,18 +109,24 @@ export function Step3Summary() {
       </div>
 
       {/* Risk Assessment */}
-      <div className={`mb-8 rounded-lg border p-4 ${riskColorMap[risk.level]}`}>
-        <h3 className="text-sm font-semibold uppercase tracking-wide mb-2">
-          {t('risk.title')}
-        </h3>
-        <div className="flex justify-between items-center">
-          <div>
-            <span className="text-sm">{t('risk.score')}: </span>
-            <span className="font-bold text-lg">{risk.score}</span>
-          </div>
-          <div className="text-lg font-bold">{t(`risk.${risk.level}`)}</div>
+      {riskLoading ? (
+        <div className="mb-8 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center text-sm text-[#575756]">
+          {t('risk.loading')}
         </div>
-      </div>
+      ) : risk && (
+        <div className={`mb-8 rounded-lg border p-4 ${riskColorMap[risk.level]}`}>
+          <h3 className="text-sm font-semibold uppercase tracking-wide mb-2">
+            {t('risk.title')}
+          </h3>
+          <div className="flex justify-between items-center">
+            <div>
+              <span className="text-sm">{t('risk.score')}: </span>
+              <span className="font-bold text-lg">{risk.score}</span>
+            </div>
+            <div className="text-lg font-bold">{t(`risk.${risk.level}`)}</div>
+          </div>
+        </div>
+      )}
 
       {/* Error */}
       {status === 'error' && (
@@ -122,7 +140,7 @@ export function Step3Summary() {
         <Button variant="secondary" type="button" onClick={prevStep} disabled={status === 'loading'}>
           {t('button.back')}
         </Button>
-        <Button onClick={handleSubmit} disabled={status === 'loading'}>
+        <Button onClick={handleSubmit} disabled={status === 'loading' || riskLoading}>
           {status === 'loading' ? t('submit.loading') : t('button.submit')}
         </Button>
       </div>

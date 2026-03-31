@@ -7,7 +7,7 @@ interface RiskInput {
   type: InsuranceType;
 }
 
-export function calculateRisk(input: RiskInput): RiskResult {
+function calculateRiskLocally(input: RiskInput): RiskResult {
   const score =
     input.age / 10 +
     input.coverage / 10000 +
@@ -23,4 +23,23 @@ export function calculateRisk(input: RiskInput): RiskResult {
   }
 
   return { score: Math.round(score * 100) / 100, level };
+}
+
+export async function fetchRiskScore(input: RiskInput): Promise<RiskResult> {
+  try {
+    const response = await fetch('/api/risk', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(input),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Risk API failed, using client-side fallback:', error);
+    return calculateRiskLocally(input);
+  }
 }
