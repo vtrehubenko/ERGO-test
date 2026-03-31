@@ -5,7 +5,7 @@ import type { CustomerData, InsuranceData } from '../types/wizard';
 const mockCustomer: CustomerData = {
   firstName: 'Jan',
   lastName: 'Kowalski',
-  age: 30,
+  dateOfBirth: '1996-03-30',
   city: 'Warszawa',
 };
 

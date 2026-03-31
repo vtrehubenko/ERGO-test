@@ -17,8 +17,6 @@ export const customerSchema = z.object({
     },
     { message: 'ageMax' }
   ),
-  country: z.string().min(1, 'required'),
-  province: z.string().min(1, 'required'),
   city: z.string().min(1, 'required'),
 });
 

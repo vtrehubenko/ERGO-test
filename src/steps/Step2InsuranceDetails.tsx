@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { insuranceSchema } from '../schemas/insuranceSchema';
 import type { InsuranceFormData } from '../schemas/insuranceSchema';
@@ -8,6 +8,7 @@ import { Input } from '../components/Input';
 import { Select } from '../components/Select';
 import { Checkbox } from '../components/Checkbox';
 import { Button } from '../components/Button';
+import { VehicleYearPicker } from '../components/VehicleYearPicker';
 import type { InsuranceType } from '../types/wizard';
 
 export function Step2InsuranceDetails() {
@@ -17,10 +18,12 @@ export function Step2InsuranceDetails() {
   const {
     register,
     handleSubmit,
+    control,
     watch,
     formState: { errors },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } = useForm<InsuranceFormData>({
-    resolver: zodResolver(insuranceSchema),
+    resolver: zodResolver(insuranceSchema) as any,
     defaultValues: {
       type: state.insuranceData.type,
       coverage: state.insuranceData.coverage || undefined,
@@ -67,13 +70,18 @@ export function Step2InsuranceDetails() {
           {...register('coverage')}
         />
         {selectedType === 'Car' && (
-          <Input
-            id="vehicleYear"
-            type="number"
-            label={t('field.vehicleYear')}
-            placeholder={t('placeholder.vehicleYear')}
-            error={errors.vehicleYear && t(`error.${errors.vehicleYear.message}`)}
-            {...register('vehicleYear')}
+          <Controller
+            name="vehicleYear"
+            control={control}
+            render={({ field }) => (
+              <VehicleYearPicker
+                value={field.value}
+                onChange={field.onChange}
+                label={t('field.vehicleYear')}
+                placeholder={t('placeholder.vehicleYear')}
+                error={errors.vehicleYear && t(`error.${errors.vehicleYear.message}`)}
+              />
+            )}
           />
         )}
         <Checkbox

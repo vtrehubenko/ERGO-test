@@ -2,8 +2,6 @@ export interface CustomerData {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  country: string;
-  province: string;
   city: string;
 }
 

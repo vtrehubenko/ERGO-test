@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { LanguageProvider } from '../context/LanguageContext';
 import { useTranslation } from './useTranslation';
 

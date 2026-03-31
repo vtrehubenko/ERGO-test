@@ -10,8 +10,6 @@ describe('customerSchema', () => {
     firstName: 'Jan',
     lastName: 'Kowalski',
     dateOfBirth: '1996-03-30',
-    country: 'PL',
-    province: 'Mazowieckie',
     city: 'Warszawa',
   };
 
@@ -69,20 +67,6 @@ describe('customerSchema', () => {
     vi.setSystemTime(new Date('2026-03-30'));
     const result = customerSchema.safeParse({ ...validData, dateOfBirth: '1926-03-30' });
     expect(result.success).toBe(true);
-  });
-
-  it('rejects empty country', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-03-30'));
-    const result = customerSchema.safeParse({ ...validData, country: '' });
-    expect(result.success).toBe(false);
-  });
-
-  it('rejects empty province', () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-03-30'));
-    const result = customerSchema.safeParse({ ...validData, province: '' });
-    expect(result.success).toBe(false);
   });
 
   it('rejects empty city', () => {

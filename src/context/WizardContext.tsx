@@ -1,12 +1,11 @@
-import { createContext, useState, ReactNode, useCallback } from 'react';
+import { createContext, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import type { CustomerData, InsuranceData, WizardState } from '../types/wizard';
 
 const initialCustomerData: CustomerData = {
   firstName: '',
   lastName: '',
   dateOfBirth: '',
-  country: '',
-  province: '',
   city: '',
 };
 
