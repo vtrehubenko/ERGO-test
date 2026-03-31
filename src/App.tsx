@@ -2,6 +2,7 @@ import { useWizard } from './hooks/useWizard';
 import { useTranslation } from './hooks/useTranslation';
 import { StepIndicator } from './components/StepIndicator';
 import { LanguageSwitcher } from './components/LanguageSwitcher';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Step1CustomerData } from './steps/Step1CustomerData';
 import { Step2InsuranceDetails } from './steps/Step2InsuranceDetails';
 import { Step3Summary } from './steps/Step3Summary';
@@ -34,7 +35,11 @@ function WizardContent() {
 }
 
 function App() {
-  return <WizardContent />;
+  return (
+    <ErrorBoundary>
+      <WizardContent />
+    </ErrorBoundary>
+  );
 }
 
 export default App;

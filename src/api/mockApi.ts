@@ -15,7 +15,9 @@ export async function submitOffer(
   await delay(1000 + Math.random() * 1000);
 
   if (Math.random() < 0.1) {
-    throw new Error('Server error');
+    const error = new Error('Server error');
+    console.error('submitOffer failed:', error);
+    throw error;
   }
 
   return { offerId: generateOfferId() };
